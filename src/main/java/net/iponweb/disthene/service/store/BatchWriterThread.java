@@ -66,6 +66,9 @@ class BatchWriterThread extends WriterThread {
 
         if (statements.size() >= batchSize || (lastFlushTimestamp < System.currentTimeMillis() - INTERVAL)) {
             lastFlushTimestamp = System.currentTimeMillis();
+            logger.warn("about to flush batch with statements");
+            logger.warn(statements);
+
             flush();
         }
     }
@@ -80,6 +83,9 @@ class BatchWriterThread extends WriterThread {
             for (Statement s : batchStatements) {
                 batch.add(s);
             }
+
+            logger.debug("about to send batch");
+            logger.debug(batch);
 
             ResultSetFuture future = session.executeAsync(batch);
             Futures.addCallback(future,
